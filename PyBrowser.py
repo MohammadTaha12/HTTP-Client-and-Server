@@ -1,71 +1,99 @@
 import tkinter as tk
-from tkinter import scrolledtext, filedialog, messagebox, simpledialog
-import urllib.request
-import http.cookiejar
-import base64
-import json
+from tkinter import scrolledtext, simpledialog, messagebox, filedialog
+import requests
+import requests_cache
+from requests.auth import HTTPBasicAuth
 
 class PyBrowser(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("PyBrowser")
-        self.geometry("600x400")
-        self.cookie_jar = http.cookiejar.CookieJar()  # Initialize the cookie jar
-        self.create_widgets()
-        self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.cookie_jar))
+        self.geometry("800x600")
+        self.session = requests.Session()  # Use a session object to handle cookies automatically
+        requests_cache.install_cache('pybrowser_cache')  # Enable caching
+
+        # Initialize login process
+        if self.login():
+            self.create_widgets()  # Create main application window if login is successful
+        else:
+            self.quit()  # Quit the application if login fails
+
+    def login(self):
+        # Creating a top-level widget for login
+        login_window = tk.Toplevel(self)
+        login_window.title("Login")
+        login_window.geometry("300x200")
+        login_window.transient(self)  # Make login window transient to the main app
+        login_window.grab_set()  # Modal- makes all other windows inaccessible
+
+        tk.Label(login_window, text="Username:").pack(pady=10)
+        username_entry = tk.Entry(login_window, width=30)
+        username_entry.pack(pady=5)
+
+        tk.Label(login_window, text="Password:").pack(pady=10)
+        password_entry = tk.Entry(login_window, show="*", width=30)
+        password_entry.pack(pady=5)
+
+        login_successful = tk.BooleanVar(value=False)  # Boolean to keep track of login status
+
+        def check_credentials():
+            # Check if the credentials are correct
+            if username_entry.get() == "abu_taha" and password_entry.get() == "m123456":
+                login_successful.set(True)
+                login_window.destroy()  # Close the login window on successful login
+            else:
+                messagebox.showerror("Login failed", "Incorrect username or password")
+
+        # Login button
+        login_button = tk.Button(login_window, text="Login", command=check_credentials)
+        login_button.pack(pady=20)
+
+        login_window.wait_window()  # Wait for the login window to close
+        return login_successful.get()  # Return the status of the login attempt
 
     def create_widgets(self):
+        tk.Label(self, text="URL:").pack()
         self.url_entry = tk.Entry(self, width=80)
-        self.url_entry.pack(pady=10)
+        self.url_entry.pack()
 
-        self.get_button = tk.Button(self, text="GET Request", command=lambda: self.send_request('GET'))
-        self.get_button.pack(side=tk.LEFT, padx=5)
+        self.method_var = tk.StringVar(value="GET")
+        methods = ["GET", "POST", "PUT", "DELETE"]
+        for method in methods:
+            tk.Radiobutton(self, text=method, value=method, variable=self.method_var).pack(anchor=tk.W)
 
-        self.post_button = tk.Button(self, text="POST Request", command=lambda: self.send_request('POST'))
-        self.post_button.pack(side=tk.LEFT, padx=5)
+        tk.Label(self, text="Data (for POST/PUT):").pack()
+        self.data_text = tk.Text(self, height=5)
+        self.data_text.pack()
 
-        self.save_button = tk.Button(self, text="Save as HTML", command=self.save_to_html)
-        self.save_button.pack(pady=10)
+        tk.Button(self, text="Send Request", command=self.send_request).pack()
+        tk.Button(self, text="Save as HTML", command=self.save_response_as_html).pack()
 
-        self.response_text = scrolledtext.ScrolledText(self, width=70, height=10, state=tk.DISABLED)
-        self.response_text.pack(pady=10)
+        self.response_text = scrolledtext.ScrolledText(self, height=15)
+        self.response_text.pack()
 
-    def send_request(self, method='GET'):
+    def send_request(self):
         url = self.url_entry.get()
-        if not url:
-            messagebox.showerror("Error", "URL is required")
-            return
+        method = self.method_var.get()
+        data = self.data_text.get("1.0", "end-1c")
+        headers = {'Content-Type': 'application/json'} if method in ['POST', 'PUT'] else {}
 
-        headers = {'User-Agent': 'PyBrowser/1.0'}
-        data = None
+        auth = HTTPBasicAuth('abu_taha', 'm123456')
 
-        if method == 'POST':
-            content = simpledialog.askstring("Input", "Enter JSON data for POST request:")
-            if content:
-                try:
-                    data = json.dumps(json.loads(content)).encode('utf-8')
-                    headers['Content-Type'] = 'application/json'
-                except json.JSONDecodeError:
-                    messagebox.showerror("Error", "Invalid JSON data.")
-                    return
-
-        req = urllib.request.Request(url, data=data, headers=headers, method=method)
         try:
-            with self.opener.open(req) as response:
-                response_data = response.read().decode('utf-8')
-                self.display_response(response, response_data)
-        except urllib.error.URLError as e:
-            messagebox.showerror("Error", f"Network error: {e}")
+            response = self.session.request(method, url, data=data, headers=headers, auth=auth)
+            self.display_response(response)
+        except requests.exceptions.RequestException as e:
+            messagebox.showerror("Error", str(e))
 
-    def display_response(self, response, response_data):
+    def display_response(self, response):
         self.response_text.config(state=tk.NORMAL)
         self.response_text.delete(1.0, tk.END)
-        self.response_text.insert(tk.END, f"Status Code: {response.status}\n")
-        self.response_text.insert(tk.END, f"Headers: {response.headers}\n")
-        self.response_text.insert(tk.END, f"Content: {response_data}\n")
+        self.response_text.insert(tk.END, f"Status Code: {response.status_code}\n\n")
+        self.response_text.insert(tk.END, f"Headers:\n{response.headers}\n\n")
+        self.response_text.insert(tk.END, f"Body:\n{response.text}\n")
         self.response_text.config(state=tk.DISABLED)
 
-    def save_to_html(self):
+    def save_response_as_html(self):
         response_data = self.response_text.get("1.0", tk.END)
         if response_data.strip():
             file_path = filedialog.asksaveasfilename(defaultextension=".html",
@@ -80,33 +108,6 @@ class PyBrowser(tk.Tk):
         else:
             messagebox.showwarning("Warning", "No data to save. Please perform a request first.")
 
-def login():
-    login_window = tk.Tk()
-    login_window.title("Login")
-    login_window.geometry("300x200")
-
-    tk.Label(login_window, text="Username:").pack(pady=10)
-    username_entry = tk.Entry(login_window, width=30)
-    username_entry.pack(pady=5)
-
-    tk.Label(login_window, text="Password:").pack(pady=10)
-    password_entry = tk.Entry(login_window, show="*", width=30)
-    password_entry.pack(pady=5)
-
-    def check_credentials():
-        username = username_entry.get()
-        password = password_entry.get()
-        if username == "mohammad@loay.com" and password == "lm123456":
-            login_window.destroy()
-            app = PyBrowser()
-            app.mainloop()
-        else:
-            messagebox.showerror("Login failed", "Incorrect username or password")
-            login_window.lift()
-
-    tk.Button(login_window, text="Login", command=check_credentials).pack(pady=20)
-
-    login_window.mainloop()
-
 if __name__ == "__main__":
-    login()
+    app = PyBrowser()
+    app.mainloop()
