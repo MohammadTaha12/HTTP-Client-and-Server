@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}إتمام الشراء - جوست{% endblock %}
+
+{% block content %}
+    <h2>إتمام عملية الشراء</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="checkout-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+        <div class="order-summary" style="flex: 1; min-width: 300px; border: 1px solid #eee; padding: 15px; border-radius: 5px;">
+            <h3>ملخص الطلب:</h3>
+            {% if cart_items %}
+                <ul style="list-style-type: none; padding: 0;">
+                {% for product_id, item in cart_items.items() %}
+                    <li style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0;">
+                        {{ item.name }} ({{ item.quantity }}x) - {{ "%.2f"|format(item.price * item.quantity) }} د.ك
+                    </li>
+                {% endfor %}
+                </ul>
+                <h4><strong>الإجمالي: {{ "%.2f"|format(total_price) }} د.ك</strong></h4>
+            {% else %}
+                <p>لا توجد منتجات في سلتك لعرضها هنا.</p>
+            {% endif %}
+        </div>
+
+        <div class="delivery-info" style="flex: 2; min-width: 300px;">
+            <h3>معلومات التوصيل والدفع:</h3>
+            <form method="POST" action="{{ url_for('main.checkout') }}">
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.customer_name.label }}<br>
+                    {{ form.customer_name(size=40) }}<br>
+                    {% for error in form.customer_name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.customer_address.label }}<br>
+                    {{ form.customer_address(rows=4, cols=40) }}<br>
+                    {% for error in form.customer_address.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.customer_phone.label }}<br>
+                    {{ form.customer_phone(size=40) }}<br>
+                    {% for error in form.customer_phone.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>سيتم الدفع نقداً عند استلام الطلب.</p>
+                <p>{{ form.submit(class="btn btn-success") }}</p>
+            </form>
+        </div>
+    </div>
+    <p style="margin-top: 20px;"><a href="{{ url_for('cart.view_cart') }}" class="btn btn-outline-secondary">العودة إلى السلة</a></p>
+{% endblock %}

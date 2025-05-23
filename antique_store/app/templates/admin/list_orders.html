@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}إدارة الطلبات - جوست{% endblock %}
+
+{% block content %}
+    <h2>إدارة الطلبات</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if orders %}
+        <table border="1" style="width:100%; text-align: right;">
+            <thead>
+                <tr>
+                    <th>رقم الطلب</th>
+                    <th>اسم العميل</th>
+                    <th>تاريخ الطلب</th>
+                    <th>الإجمالي</th>
+                    <th>الحالة</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ "%.2f"|format(order.total_amount) }} د.ك</td>
+                        <td>{{ ORDER_STATUSES.get(order.status, order.status) }}</td> {# Display translated status #}
+                        <td>
+                            <a href="{{ url_for('admin.order_detail', order_id=order.id) }}" class="btn btn-sm btn-info">عرض التفاصيل</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>لا توجد طلبات حالياً.</p>
+    {% endif %}
+{% endblock %}

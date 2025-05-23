@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}تفاصيل الطلب #{{ order.id }} - جوست{% endblock %}
+
+{% block content %}
+    <h2>تفاصيل الطلب #{{ order.id }}</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="order-details-container" style="margin-bottom: 20px;">
+        <h4>معلومات العميل:</h4>
+        <p><strong>الاسم:</strong> {{ order.customer_name }}</p>
+        <p><strong>العنوان:</strong> {{ order.customer_address | nl2br }}</p>
+        <p><strong>الهاتف:</strong> {{ order.customer_phone }}</p>
+    </div>
+
+    <div class="order-info" style="margin-bottom: 20px;">
+        <h4>معلومات الطلب:</h4>
+        <p><strong>تاريخ الطلب:</strong> {{ order.order_date.strftime('%Y-%m-%d %H:%M') }}</p>
+        <p><strong>المبلغ الإجمالي:</strong> {{ "%.2f"|format(order.total_amount) }} د.ك</p>
+        <p><strong>الحالة الحالية:</strong> {{ ORDER_STATUSES.get(order.status, order.status) }}</p>
+    </div>
+
+    <div class="order-items" style="margin-bottom: 20px;">
+        <h4>المنتجات المطلوبة:</h4>
+        {% if order.order_items.all() %}
+            <table border="1" style="width:100%; text-align: right;">
+                <thead>
+                    <tr>
+                        <th>صورة المنتج</th>
+                        <th>اسم المنتج</th>
+                        <th>الكمية</th>
+                        <th>السعر عند الشراء</th>
+                        <th>المجموع الفرعي</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.order_items %}
+                        <tr>
+                            <td>
+                                {% if item.product and item.product.image_filename %}
+                                    <img src="{{ url_for('static', filename='product_images/' + item.product.image_filename) }}" alt="{{ item.product.name }}" width="60">
+                                {% elif item.product %}
+                                     <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="لا توجد صورة" width="60">
+                                {% else %}
+                                    منتج محذوف
+                                {% endif %}
+                            </td>
+                            <td>{{ item.product.name if item.product else "منتج غير متوفر" }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ "%.2f"|format(item.price_at_purchase) }} د.ك</td>
+                            <td>{{ "%.2f"|format(item.quantity * item.price_at_purchase) }} د.ك</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>لا توجد منتجات في هذا الطلب.</p>
+        {% endif %}
+    </div>
+
+    <div class="update-status-form">
+        <h4>تحديث حالة الطلب:</h4>
+        <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.id) }}">
+            <label for="status">الحالة الجديدة:</label>
+            <select name="status" id="status">
+                {% for status_key, status_display in ORDER_STATUSES.items() %}
+                    <option value="{{ status_key }}" {% if order.status == status_key %}selected{% endif %}>
+                        {{ status_display }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary" style="margin-right:10px;">تحديث الحالة</button>
+        </form>
+    </div>
+    
+    <p style="margin-top: 20px;"><a href="{{ url_for('admin.list_orders') }}" class="btn btn-outline-secondary">العودة إلى قائمة الطلبات</a></p>
+{% endblock %}

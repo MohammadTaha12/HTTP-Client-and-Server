@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}سلة المشتريات - جوست{% endblock %}
+
+{% block content %}
+    <h2>سلة مشترياتك</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if cart_items %}
+        <table border="1" style="width:100%; text-align: right; margin-bottom: 20px;">
+            <thead>
+                <tr>
+                    <th>صورة المنتج</th>
+                    <th>اسم المنتج</th>
+                    <th>السعر</th>
+                    <th>الكمية</th>
+                    <th>المجموع الفرعي</th>
+                    <th>إجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product_id, item in cart_items.items() %}
+                    <tr>
+                        <td>
+                            {% if item.image %}
+                                <img src="{{ url_for('static', filename='product_images/' + item.image) }}" alt="{{ item.name }}" width="80">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="لا توجد صورة" width="80">
+                            {% endif %}
+                        </td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ "%.2f"|format(item.price) }} د.ك</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ "%.2f"|format(item.price * item.quantity) }} د.ك</td>
+                        <td>
+                            <form action="{{ url_for('cart.remove_from_cart', product_id=product_id|int) }}" method="POST">
+                                <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3>الإجمالي: {{ "%.2f"|format(total_price) }} د.ك</h3>
+        <p><a href="{{ url_for('main.index') }}" class="btn btn-primary">متابعة التسوق</a>
+           <a href="{{ url_for('main.checkout') }}" class="btn btn-success" style="margin-right: 10px;">متابعة لإتمام الشراء</a></p>
+
+    {% else %}
+        <p>سلتك فارغة حالياً.</p>
+        <p><a href="{{ url_for('main.index') }}" class="btn btn-primary">تصفح المنتجات</a></p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,248 @@
+/* General & Typography */
+body {
+    font-family: 'Tajawal', sans-serif; /* Example Arabic font, ensure it's linked or widely available */
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa; /* Light grey background */
+    color: #333;
+    direction: rtl; /* Already set in base.html, but good for CSS context */
+}
+.container { /* Add a container class to wrap content in base.html for centering */
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cairo', sans-serif; /* Example heading font */
+}
+a { color: #007bff; text-decoration: none; }
+a:hover { color: #0056b3; text-decoration: underline; }
+
+/* Navigation Bar */
+nav {
+    background-color: #343a40;
+    padding: 10px 20px;
+    color: #fff;
+}
+nav a {
+    color: #fff;
+    margin-left: 15px;
+    font-size: 1.1em;
+}
+nav a:hover {
+    color: #f0f0f0;
+    text-decoration: none;
+}
+nav ul { list-style-type: none; padding: 0; margin: 0; display: inline; }
+nav ul li { display: inline; margin-left: 15px; }
+nav .brand { font-weight: bold; font-size: 1.5em; color: #fff; } /* Ensure brand link is also white */
+
+/* Forms */
+form p { margin-bottom: 15px; }
+label { display: block; margin-bottom: 5px; font-weight: bold; }
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Important for width: 100% */
+    margin-top: 5px; /* Added margin for spacing from label */
+}
+textarea { min-height: 100px; }
+input[type="submit"], button, .btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    display: inline-block; /* Ensure buttons can be styled with margin/padding */
+}
+input[type="submit"]:hover, button:hover, .btn:hover {
+    background-color: #0056b3;
+}
+.btn-primary { background-color: #007bff; } /* Explicit primary */
+.btn-primary:hover { background-color: #0056b3; }
+.btn-secondary { background-color: #6c757d; }
+.btn-secondary:hover { background-color: #545b62; }
+.btn-success { background-color: #28a745; }
+.btn-success:hover { background-color: #1e7e34; }
+.btn-danger { background-color: #dc3545; }
+.btn-danger:hover { background-color: #c82333; }
+.btn-info { background-color: #17a2b8; }
+.btn-info:hover { background-color: #117a8b; }
+.btn-outline-secondary {
+    background-color: transparent;
+    border-color: #6c757d;
+    color: #6c757d;
+}
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: right; /* Default for RTL */
+}
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+tr:nth-child(even) { background-color: #f9f9f9; }
+
+/* Alerts/Flash Messages */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+.alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
+.alert-info { color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; }
+.alert-warning { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+    background-color: #e9ecef;
+    color: #6c757d;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Admin Area Distinction */
+.admin-page nav {
+    background-color: #5a6268; /* Darker grey for admin nav */
+}
+.admin-page nav .brand {
+    color: #fff; /* Ensure brand is visible on darker nav */
+}
+.admin-page nav a:hover {
+    color: #ced4da; /* Lighter hover for admin nav links */
+}
+
+
+/* Product Gallery Styles - from previous task, ensure compatibility */
+.product-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px 0;
+}
+.product-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: center;
+    width: 220px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+}
+.product-item:hover {
+    transform: translateY(-5px);
+}
+.product-item img {
+    max-width: 100%;
+    height: 180px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+.product-item h3 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    color: #333;
+}
+.product-item a {
+    text-decoration: none;
+    color: #333;
+}
+.product-item a:hover h3 {
+    color: #007bff;
+}
+.product-item p {
+    color: #555;
+    font-size: 1em;
+}
+
+/* Responsive adjustments for Product Gallery */
+@media (max-width: 768px) { /* Adjusted breakpoint */
+    .product-item {
+        width: calc(50% - 20px); /* Two items per row */
+    }
+}
+@media (max-width: 480px) { /* Adjusted breakpoint */
+    .product-item {
+        width: calc(100% - 20px); /* One item per row */
+    }
+}
+
+/* General Responsive adjustments (from initial CSS, ensure they are still relevant) */
+@media (max-width: 600px) {
+    nav ul { text-align: center; width: 100%; } /* Center nav items on small screens */
+    nav ul li { display: block; margin: 10px 0; }
+    nav .brand { display: block; text-align: center; margin-bottom: 10px; }
+
+    /* Ensure form elements are full width on small screens */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    textarea,
+    select {
+        width: 100%;
+    }
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+}
+/* Ensure the .checkout-container also behaves responsively */
+.checkout-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.checkout-container > div { /* Target direct children: order-summary and delivery-info */
+    flex: 1 1 300px; /* Allow flex-grow, flex-shrink, and set a base width */
+}
+
+/* Ensure admin table buttons are styled */
+.admin-page table .btn { /* Specificity for admin table buttons */
+    font-size: 0.9em;
+    padding: 5px 10px;
+}
+/* Ensure form buttons in general have some margin if multiple on a line */
+form input[type="submit"] + input[type="submit"],
+form button + button,
+form .btn + .btn {
+    margin-right: 10px; /* For RTL, this would be margin-left */
+}
+html[dir="rtl"] form input[type="submit"] + input[type="submit"],
+html[dir="rtl"] form button + button,
+html[dir="rtl"] form .btn + .btn {
+    margin-right: 0;
+    margin-left: 10px;
+}

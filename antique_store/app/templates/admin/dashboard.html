@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}لوحة تحكم المدير - جوست{% endblock %} {# Translated title #}
+{% block content %}
+    <h2>لوحة تحكم المدير</h2> {# Translated header #}
+    <p>مرحباً، {{ current_user.username }}!</p> {# Translated welcome message #}
+    <p><a href="{{ url_for('auth.logout') }}">تسجيل الخروج</a></p> {# Translated logout link #}
+    
+    <h3>إدارة المتجر</h3>
+    <ul>
+        <li><a href="{{ url_for('admin.add_product') }}">إضافة منتج جديد</a></li>
+        <li><a href="{{ url_for('admin.list_products') }}">عرض وإدارة المنتجات</a></li>
+        <li><a href="{{ url_for('admin.list_orders') }}">إدارة الطلبات</a></li>
+    </ul>
+    
+    <p>إدارة المنتجات وتتبع الطلبات ستكون هنا.</p> {# Original placeholder, can be removed or kept #}
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} - متجر جوست{% endblock %}
+
+{% block content %}
+    <div class="product-detail-container" style="text-align: right;">
+        <h1>{{ product.name }}</h1>
+        
+        <div class="product-image-section">
+            {% if product.image_filename %}
+                <img src="{{ url_for('static', filename='product_images/' + product.image_filename) }}" alt="{{ product.name }}" style="max-width: 400px; border-radius: 8px; margin-bottom: 20px;">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="لا توجد صورة" style="max-width: 400px; border-radius: 8px; margin-bottom: 20px;">
+            {% endif %}
+        </div>
+        
+        <div class="product-info-section">
+            <p><strong>السعر:</strong> {{ "%.2f"|format(product.price) }} د.ك</p>
+            <p><strong>الوصف:</strong><br>{{ product.description | nl2br }}</p>
+            
+            <div class="add-to-cart-section" style="margin-top: 15px; margin-bottom:15px;">
+            {% if product.id|string in session_cart_items %}
+                <button type="button" disabled class="btn btn-secondary">موجود في السلة</button>
+            {% elif product.is_sold %}
+                <button type="button" disabled class="btn btn-danger">تم البيع</button>
+            {% else %}
+                <form action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" method="POST">
+                    <button type="submit" class="btn btn-success">إضافة إلى سلة المشتريات</button>
+                </form>
+            {% endif %}
+            </div>
+            
+            <p><a href="{{ url_for('main.index') }}">العودة إلى قائمة المنتجات</a></p>
+        </div>
+    </div>
+{% endblock %}
