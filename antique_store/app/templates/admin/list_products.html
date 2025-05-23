@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}قائمة المنتجات - جوست{% endblock %}
+
+{% block content %}
+    <h2>قائمة المنتجات</h2>
+    <p><a href="{{ url_for('admin.add_product') }}">إضافة منتج جديد</a></p>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if products %}
+        <table border="1" style="width:100%; text-align: right;">
+            <thead>
+                <tr>
+                    <th>اسم المنتج</th>
+                    <th>السعر</th>
+                    <th>الصورة</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ "%.2f"|format(product.price) }} د.ك</td> {# Assuming Kuwaiti Dinar or similar format #}
+                        <td>
+                            {% if product.image_filename %}
+                                <img src="{{ url_for('static', filename='product_images/' + product.image_filename) }}" alt="{{ product.name }}" width="100">
+                            {% else %}
+                                لا توجد صورة
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" class="btn btn-sm btn-primary">تعديل</a>
+                            <form action="{{ url_for('admin.delete_product', product_id=product.id) }}" method="POST" style="display:inline;">
+                                <input type="submit" value="حذف" onclick="return confirm('هل أنت متأكد أنك تريد حذف هذا المنتج؟');" class="btn btn-sm btn-danger">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>لا توجد منتجات حالياً.</p>
+    {% endif %}
+{% endblock %}

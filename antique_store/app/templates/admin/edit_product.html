@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}تعديل المنتج - جوست{% endblock %}
+
+{% block content %}
+    <h2>تعديل المنتج: {{ product.name }}</h2>
+
+    {% if product.image_filename %}
+        <div>
+            <p>الصورة الحالية:</p>
+            <img src="{{ url_for('static', filename='product_images/' + product.image_filename) }}" alt="{{ product.name }}" width="150" style="margin-bottom: 10px;">
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('admin.edit_product', product_id=product.id) }}" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=30) }}<br>
+            {% for error in form.name.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(cols=50, rows=4) }}<br>
+            {% for error in form.description.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.price.label }}<br>
+            {{ form.price(size=10) }}<br>
+            {% for error in form.price.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.image.label }}<br>
+            {{ form.image() }}<br>
+            {% for error in form.image.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p> {# Submit button label is set in the route #}
+    </form>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <p><a href="{{ url_for('admin.list_products') }}">العودة إلى قائمة المنتجات</a></p>
+{% endblock %}
