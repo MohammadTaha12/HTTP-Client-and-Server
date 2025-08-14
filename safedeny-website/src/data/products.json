@@ -1,0 +1,58 @@
+[
+  {
+    "id": "GR-GXP2170",
+    "name": "Grandstream GXP2170 IP Phone",
+    "model": "GXP2170",
+    "category": "هواتف IP",
+    "brand": "Grandstream",
+    "images": ["/images/products/placeholder.png"],
+    "price": "اطلب عرض سعر",
+    "short_description": "هاتف IP احترافي يدعم 12 خطاً، مثالي للمستخدمين المشغولين.",
+    "long_description": "يتميز هاتف GXP2170 بشاشة LCD ملونة مقاس 4.3 بوصة، و 5 مفاتيح قابلة للبرمجة، وصوت عالي الدقة، وبلوتوث مدمج.",
+    "docs": [
+      { "name": "Datasheet", "url": "#" }
+    ]
+  },
+  {
+    "id": "FN-FG-40F",
+    "name": "Fortinet FortiGate 40F",
+    "model": "FG-40F",
+    "category": "حلول أمن الشبكات",
+    "brand": "Fortinet",
+    "images": ["/images/products/placeholder.png"],
+    "price": 2500.00,
+    "short_description": "جدار حماية (Firewall) من الجيل التالي للأعمال الصغيرة والمتوسطة.",
+    "long_description": "يوفر حماية متكاملة ضد التهديدات السيبرانية المتقدمة مع أداء عالٍ وسهولة في الإدارة. يتضمن إمكانيات SD-WAN المدمجة.",
+    "docs": [
+      { "name": "Datasheet", "url": "#" }
+    ]
+  },
+  {
+    "id": "RJ-RG-AP820-L",
+    "name": "Ruijie RG-AP820-L(V2) Wi-Fi 6 Access Point",
+    "model": "RG-AP820-L(V2)",
+    "category": "أجهزة الشبكات",
+    "brand": "Ruijie",
+    "images": ["/images/products/placeholder.png"],
+    "price": "اطلب عرض سعر",
+    "short_description": "نقطة وصول (Access Point) تدعم تقنية Wi-Fi 6 لسرعات فائقة وكفاءة عالية.",
+    "long_description": "مثالية للبيئات عالية الكثافة مثل المكاتب والمدارس والفنادق، وتوفر تغطية واسعة وأداءً مستقراً.",
+    "docs": [
+      { "name": "Datasheet", "url": "#" }
+    ]
+  },
+  {
+    "id": "FN-FAP-221E",
+    "name": "Fortinet FortiAP 221E",
+    "model": "FAP-221E",
+    "category": "أجهزة الشبكات",
+    "brand": "Fortinet",
+    "images": ["/images/products/placeholder.png"],
+    "price": "اطلب عرض سعر",
+    "short_description": "نقطة وصول لاسلكية (Wireless AP) داخلية عالية الأداء تدعم 802.11ac Wave 2.",
+    "long_description": "توفر سرعات اتصال عالية وتغطية ممتازة، وتتكامل بسلاسة مع جدران الحماية FortiGate لإدارة مركزية.",
+    "docs": [
+      { "name": "Datasheet", "url": "#" }
+    ]
+  }
+]
